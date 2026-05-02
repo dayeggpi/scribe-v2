@@ -26,6 +26,134 @@ This project is born from the idea of "bringing receipts" for the life you lead/
 
 ![pic for profiles](https://github.com/user-attachments/assets/56afd51b-3560-419a-93f4-af315ba2968f)
 
+## Features added as v2
+
+🚀 New Features & Capabilities
+- Markdown-style Text Formatting: Added support for inline string formatting (e.g., **bold** for bold text, _underline_ for underlined text, and ==highlighted for inverted/white-on-black text).
+- Image Printing: Added ability to upload and print images. Images are automatically scaled proportionally to fit the printer max width (384px). Includes an "invert colors" option.
+- QR Code Printing: Added a toggle to convert text input directly into a printed QR code (prints the code only, omitting the raw text).
+- Advanced Layout Controls: Added settings to change font size, text alignment (Left, Center, Right), and adjust line spacing.
+- Print Orientation & Direction: Added an "upside down" (flip) toggle to reverse the print direction based on how the paper exits the machine.
+- Global Overrides: Added toggles to invert the entire text output (white text on a black background) and dynamically append the current Date to the printed message.
+
+🐛 Bug Fixes & Stability
+
+- International Character Support: Fixed encoding issues that caused Chinese characters to print instead of French accents (like é) and handled emojis to prevent formatting errors.
+- WiFi Auto-Reconnect: Fixed the "IP unset" boot error. The app now automatically attempts to reconnect up to 5 times.
+- Hardware Error Log: If the ESP8266 fails to connect after 5 tries, it will print the first 200 characters of the error log directly to the thermal printer for easier debugging.
+- Memory Management: Fixed Out-of-Memory (OOM) errors and silent failures that occurred when uploading and processing 384px images.
+- Form Submission Fix: Prevented the Enter key from accidentally triggering a premature form submission.
+
+✨ Web Interface (UI) Improvements
+- AJAX Submissions: Form submissions now happen in the background without reloading the webpage. Both text and image forms auto-reset upon successful print.
+- WYSIWYG Text Box: The text area now accurately represents the physical print roll by auto-wrapping at 32 characters. Formatting tags (like ==) are mathematically excluded from the visible character limits to maintain wrapping accuracy.
+- Character Tracking: Removed the strict 200-character limit and replaced it with a live character counter for better visibility.
+- Image Tab Enhancements: Added a explicit "Clear" button to easily purge selected images from the queue.
+- Aesthetics: Added a simple, lightweight favicon to the web page.
+- State fixes: Default orientation toggles were fixed to match standard expected behavior (unchecked logic corrected).
+
+💻 Developer & API Updates
+- POST Request Support: The API now fully supports POST payloads alongside standard GET requests, allowing for larger and safer text formatting.
+- New API Endpoints & Parameters: Added full programmatic support for layout modifications (showDate, inverted, upsideDown, qrcode, spacing, alignment, size).
+- Documentation: Generated a comprehensive api.md file featuring complete documentation and simple curl examples utilizing both GET and POST methods for text, QR codes, and images.
+
+## API
+
+### Life Receipt — API Reference
+
+Base URL: `http://<printer-ip>/`  (IP printed on boot, also in Serial monitor)
+
+### POST /submit — Print a text receipt
+
+Accepts `application/x-www-form-urlencoded` or `multipart/form-data`.  
+Also accepts GET with query string (quick browser testing).
+
+### Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `message` | string | **yes** | — | Text to print. `\n` creates new lines. Inline markup supported (see below). |
+| `fontSize` | `S` \| `M` \| `L` | no | `S` | Font size. S = 1× (32 chars/line), M = 2× (16 chars/line), L = 3× (~10 chars/line). |
+| `justify` | `L` \| `C` \| `R` | no | `L` | Alignment: Left, Center, Right. |
+| `lineSpacing` | integer 24–60 | no | `30` | Line spacing in dots. Default ~30. Higher = more space between lines. |
+| `showDate` | `1` | no | off | Print auto-formatted date as an inverted header. |
+| `date` | string | no | — | Custom date: `YYYY-MM-DD` or `DD/MM/YYYY`. Only used when `showDate=1`. |
+| `inverted` | `1` | no | off | Entire message white-on-black. |
+| `upsideDown` | `1` | no | off | Rotate each character 180°. Receipt reads correctly when flipped after tearing. |
+| `qrCode` | `1` | no | off | Print `message` as a QR code instead of text. |
+
+### Inline markup (inside `message`)
+
+All modes reset at end of each line.
+
+| Syntax | Effect |
+|--------|--------|
+| `**text**` | Bold |
+| `_text_` | Underline |
+| `==text==` | Inline inverse (white on black) |
+
+Markers are nestable: `**bold _bold+underline_ back**` works.
+
+### Response
+
+- `200 OK` — body: `OK`
+- `400 Bad Request` — body: `Missing message`
+
+### Examples
+
+```bash
+# Simple
+curl -X POST http://192.168.1.x/submit -d "message=Hello"
+
+# Accented characters (é â à ç etc. all work)
+curl -X POST http://192.168.1.x/submit \
+  --data-urlencode "message=Un gâteau au café, s'il vous plaît"
+
+# Large centered bold heading
+curl -X POST http://192.168.1.x/submit \
+  -d "fontSize=L&justify=C" \
+  --data-urlencode "message=**RECEIPT**"
+
+# Mixed styles, date, tight spacing
+curl -X POST http://192.168.1.x/submit \
+  -d "showDate=1&fontSize=M&justify=C&lineSpacing=26" \
+  --data-urlencode "message=**Total:** ==42.00 EUR==
+_Merci pour votre commande_"
+
+# Right-aligned, loose spacing
+curl -X POST http://192.168.1.x/submit \
+  -d "justify=R&lineSpacing=50" \
+  --data-urlencode "message=Line one
+Line two
+Line three"
+
+# QR code
+curl -X POST http://192.168.1.x/submit \
+  --data-urlencode "message=https://example.com" -d "qrCode=1"
+
+# GET (paste in browser)
+http://192.168.1.x/submit?message=Hello&fontSize=M&justify=C
+```
+
+### POST /print-image — Print a bitmap image
+
+The web UI handles image conversion. For direct API use you must pre-process.
+
+### Payload
+
+`multipart/form-data` with one file field named `image`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `image` | binary file | Raw 1-bit-per-pixel bitmap, row-major, MSB-first. Filename **must** encode dimensions: `WxH.bin` (e.g. `384x512.bin`). |
+
+- Bytes per row = `ceil(W / 8)`. Total = `ceil(W/8) × H`.
+- Max width: 384 px (full printable area on 58 mm paper at 8 dots/mm).
+
+
+
+
+
 
 ## BOM
 
