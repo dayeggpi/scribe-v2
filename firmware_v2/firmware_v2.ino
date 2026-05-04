@@ -36,8 +36,8 @@ void printWrappedUpsideDown(String text, bool inverted, char fontSize);
 void printQRCode(String data);
 
 // === WiFi Configuration ===
-const char* ssid = "SSID";
-const char* password = "PWD";
+const char* ssid = "PEW";
+const char* password = "Au6ECQ2UdU9ywyN3jP";
 const bool printerForceAscii = true;
 
 // === Time Configuration ===
@@ -151,7 +151,7 @@ void handleRoot() {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Life Receipt</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23111'/%3E%3Crect x='6' y='8' width='20' height='2' rx='1' fill='white'/%3E%3Crect x='6' y='13' width='20' height='2' rx='1' fill='white'/%3E%3Crect x='6' y='18' width='14' height='2' rx='1' fill='white'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA7e3tAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEREQAAAAAAAAAAAAAAAAAAAAAAAAAAABEREREAAAAAAAAAAAAAAAAAAAAAAAAAABERERERAAAAAAAAAAAAAAAREREREREAAAAAAAAAAAAAEREREREREAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script defer>
@@ -507,7 +507,7 @@ void handleRoot() {
   </main>
 
   <footer class="text-sm text-gray-400 mt-16">
-    Designed with love by <a href="https://urbancircles.club" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors duration-200 underline decoration-gray-300 hover:decoration-gray-500 underline-offset-2">Peter / Urban Circles</a>. Adapted by <a href="https://github.com/dayeggpi" target="_blank"
+    Designed with love by <a href="https://urbancircles.club" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors duration-200 underline decoration-gray-300 hover:decoration-gray-500 underline-offset-2">Peter / Urban Circles</a>. Iterated by <a href="https://github.com/dayeggpi" target="_blank"
       class="text-gray-500 hover:text-gray-700 transition-colors duration-200 underline decoration-gray-300 hover:decoration-gray-500 underline-offset-2">dayeggpi</a>
   </footer>  
 </body>
