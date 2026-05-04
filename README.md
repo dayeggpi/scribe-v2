@@ -28,6 +28,23 @@ This project is born from the idea of "bringing receipts" for the life you lead/
 
 ## Features added as v2
 
+New 3D printed case (see https://github.com/dayeggpi/scribe-v2/blob/main/Scribe.stl to download it, don't forget support).
+
+Note this case is Thermal Printer QR701 dimensions (103.5 x 57 x 65 mm).
+
+<img width="600" alt="image" src="https://raw.githubusercontent.com/dayeggpi/scribe-v2/refs/heads/main/img/front.jpg">
+<img width="600" alt="image" src="https://raw.githubusercontent.com/dayeggpi/scribe-v2/refs/heads/main/img/back.jpg">
+<img width="600" alt="image" src="https://raw.githubusercontent.com/dayeggpi/scribe-v2/refs/heads/main/img/inside.jpg">
+
+
+
+And the webapp:
+
+<img width="600" alt="image" src="https://raw.githubusercontent.com/dayeggpi/scribe-v2/refs/heads/main/img/webapp_text.png">
+<img width="600" alt="image" src="https://raw.githubusercontent.com/dayeggpi/scribe-v2/refs/heads/main/img/webapp_img.png">
+
+
+
 🚀 New Features & Capabilities
 - Markdown-style Text Formatting: Added support for inline string formatting (e.g., **bold** for bold text, _underline_ for underlined text, and ==highlighted for inverted/white-on-black text).
 - Image Printing: Added ability to upload and print images. Images are automatically scaled proportionally to fit the printer max width (384px). Includes an "invert colors" option.
